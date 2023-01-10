@@ -16,6 +16,7 @@ async function signup(e){
         console.log(response.data[0]);
      if(response.data[0].status==1){
         document.getElementById('msg').textContent=response.data[0].message;
+        localStorage.setItem('token',response.data[0].token)
         window.location.href='expense.html';
      }
      if(response.data[0].status==0){

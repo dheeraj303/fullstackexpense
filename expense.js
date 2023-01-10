@@ -26,9 +26,11 @@ var type=document.getElementById('type').value;
                 "type":type
        }
         // let obj =new Obj(`${amount}, ${desc}, ${type}`);
+            const token=localStorage.getItem('token');
             if(id==''){
                 try{
-           let response= await axios.post('http://localhost:3000/save',obj1)
+                    console.log(token);
+           let response= await axios.post('http://localhost:3000/save',obj1,{headers:{"Authorization":token}})
            viewuser(response.data);
         }
             catch(err){console.log(err)};
@@ -60,8 +62,9 @@ async function getuserbyid(id){
     catch(err){console.log(err)};
 }
 async function getuser(){
+    const token=localStorage.getItem('token');
     try{
-    let response=await axios.get('http://localhost:3000/get-expense')
+    let response=await axios.get('http://localhost:3000/get-expense',{headers:{"Authorization":token}})
     for (let i = 0; i < response.data.length; i++){
         // nextValue = localStorage.getItem(localStorage.key(i));
     //    console.log(nextValue);
@@ -121,9 +124,10 @@ function viewuser(data){
 }
 
 async function deleteexpense(id){
+    const token=localStorage.getItem('token');
         // localStorage.removeItem(amount);
       try{
-        axios.get(`http://localhost:3000/delete/${id}`)
+        axios.get(`http://localhost:3000/delete/${id}`,{headers:{"Authorization":token}})
         deletefromlist(id);
     }
        
