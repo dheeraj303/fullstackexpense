@@ -52,7 +52,17 @@ var type=document.getElementById('type').value;
     
 }
 window.addEventListener('DOMContentLoaded',getuser);
+window.addEventListener('DOMContentLoaded',checkpremium);
 
+function checkpremium(){
+    const token=localStorage.getItem('token'); 
+    let premium=JSON.parse(atob(token.split('.')[1]));
+    console.log(premium);
+    if(premium.ispremium){
+        const childhtml='<h1>You are a premium User </h1> <button id="leaderboard" onclick="getleaderboard()" class="btn btn-lg btn-primary">Show Leaderboard</button>';
+        document.querySelector('#premium').innerHTML=childhtml;
+    }
+}
 async function getuserbyid(id){
    try{
     let userbyid=await axios.get(`http://localhost:3000/getbyid/${id}`)
@@ -156,6 +166,8 @@ function deletefromlist(amount){
                 payment_id:response.razorpay_payment_id
             },{headers:{"Authorization":token}})
             alert("You are a Premium User");
+            const childhtml='<h1>You are a premium User </h1> <button id="leaderboard" onclick="getleaderboard()" class="btn btn-lg btn-primary">Show Leaderboard</button>';
+            document.querySelector('#premium').innerHTML=childhtml;
         }
     }
     var rzp1 = new Razorpay(options);
@@ -168,3 +180,38 @@ function deletefromlist(amount){
     })
    }
   
+//    window.addEventListener('DOMContentLoaded',getuser);
+   async function getleaderboard(){
+    const parentnode=document.querySelector('#leaderboard1');
+    parentnode.innerHTML="";
+    // alert("aaya")
+    const token=localStorage.getItem('token');
+    try{
+    let response=await axios.get('http://localhost:3000/premium/get-leadership',{headers:{"Authorization":token}})
+    for (let i = 0; i < response.data.length; i++){
+        // nextValue = localStorage.getItem(localStorage.key(i));
+    //    console.log(nextValue);
+    //    let data=JSON.parse(value);
+    viewleaderboard(response.data[i]);
+    
+    
+    }   
+    }
+    catch(err){
+        console.log(err)
+    };
+}
+
+   function viewleaderboard(data){
+    // const li=document.createElement('li');
+    
+   
+   
+    const childhtml=`<li id=${data.id}> ${data.name} ${data.total}  `;
+    
+    const parentnode=document.querySelector('#leaderboard1');
+    console.log(parentnode);
+    parentnode.innerHTML=parentnode.innerHTML+childhtml;
+    // console.log(list);
+
+}
