@@ -12,10 +12,11 @@ async function forgetpassword(e){
         console.log(response.data[0]);
      if(response.data[0].status==1){
         document.getElementById('msg').textContent=response.data[0].message;
-       
-        window.location.href='login.html';
+        localStorage.setItem('token',response.data[0].token);
+        // email.value=response[0].data.email;
+        // window.location.href='changepassword.html';
      }
-     if(response.data[0].status==0){
+     else{
         document.getElementById('msg').textContent=response.data[0].message;
      }
     }
@@ -23,3 +24,4 @@ async function forgetpassword(e){
         console.log(err);
     }
 }
+
