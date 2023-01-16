@@ -14,7 +14,7 @@ async function changepassword(e){
        
     }
     try{
-        let response=await axios.post('http://localhost:3000/change-password',data)
+        let response=await axios.post(`http://localhost:3000/change-password/${localStorage.getItem('password_id')}`,data)
         console.log(response.data[0]);
      if(response.data[0].status==1){
         document.getElementById('msg').textContent=response.data[0].message;
