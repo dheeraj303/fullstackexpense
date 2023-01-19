@@ -234,3 +234,32 @@ async function getrecent(){
  
 
 }
+
+document.getElementById('Page1').addEventListener('click',async ()=>{
+    const parentnode=document.querySelector('.users');
+    parentnode.innerHTML="";
+    const token=localStorage.getItem('token');
+    try{
+    let response=await axios.get('http://localhost:3000/get-expense?page=1',{headers:{"Authorization":token}})
+    for (let i = 0; i < response.data.length; i++){
+        viewuser(response.data[i]);
+    }   
+    }
+    catch(err){
+        console.log(err)
+    };
+})
+document.getElementById('page2').addEventListener('click',async ()=>{
+    const parentnode=document.querySelector('.users');
+    parentnode.innerHTML="";
+    const token=localStorage.getItem('token');
+    try{
+    let response=await axios.get('http://localhost:3000/get-expense?page=2',{headers:{"Authorization":token}})
+    for (let i = 0; i < response.data.length; i++){
+        viewuser(response.data[i]);
+    }   
+    }
+    catch(err){
+        console.log(err)
+    };
+})
