@@ -60,16 +60,22 @@ async function getuserbyid(id){
    try{
     let userbyid=await axios.get(`http://localhost:3000/getbyid/${id}`)
     viewuser(userbyid.data);
+   
 }
     
     catch(err){console.log(err)};
 }
 async function getuser(){
+    document.querySelector('.users').innerHTML="";
     const token=localStorage.getItem('token');
+    const select=localStorage.getItem('select');
+    // const limit=`${select}?'&limit='${select}`;
     try{
-    let response=await axios.get('http://localhost:3000/get-expense',{headers:{"Authorization":token}})
-    for (let i = 0; i < response.data.length; i++){
-        viewuser(response.data[i]);
+    let response=await axios.get(`http://localhost:3000/get-expense?limit=${select}`,{headers:{"Authorization":token}})
+    createpagination(response.data.pages);
+    console.log(response);
+    for (let i = 0; i < response.data.expense.length; i++){
+        viewuser(response.data.expense[i]);
     }   
     }
     catch(err){
@@ -77,7 +83,37 @@ async function getuser(){
     };
 }
 
-
+function createpagination(pages){
+    document.querySelector('#pagination').innerHTML="";
+    let childhtml="";
+    for(var i=1;i<=pages;i++){
+         childhtml+=`<a class="mx-2" id="page=${i}" >${i}</a>`;  
+    }
+    const parentnode=document.querySelector('#pagination');
+    parentnode.innerHTML=parentnode.innerHTML+childhtml;
+}
+document.querySelector('#pagination').addEventListener('click',getexpensepage);
+async function getexpensepage(e){
+    const parentnode=document.querySelector('.users');
+//    const select=localStorage.getItem('select');
+    parentnode.innerHTML="";
+    // const limit=`${select}?'&limit='${select}`;
+    const token=localStorage.getItem('token');
+    try{
+    let response=await axios.get(`http://localhost:3000/get-expense?${e.target.id}`,{headers:{"Authorization":token}})
+    for (let i = 0; i < response.data.expense.length; i++){
+        viewuser(response.data.expense[i]);
+    }   
+    }
+    catch(err){
+        console.log(err)
+    }; 
+}
+document.querySelector('#select').addEventListener('change',(e)=>{
+    localStorage.setItem('select',e.target.value);
+    getuser();
+    // getexpensepage();
+})
  async function editexpense(amount){
 
 try{
@@ -235,31 +271,31 @@ async function getrecent(){
 
 }
 
-document.getElementById('Page1').addEventListener('click',async ()=>{
-    const parentnode=document.querySelector('.users');
-    parentnode.innerHTML="";
-    const token=localStorage.getItem('token');
-    try{
-    let response=await axios.get('http://localhost:3000/get-expense?page=1',{headers:{"Authorization":token}})
-    for (let i = 0; i < response.data.length; i++){
-        viewuser(response.data[i]);
-    }   
-    }
-    catch(err){
-        console.log(err)
-    };
-})
-document.getElementById('page2').addEventListener('click',async ()=>{
-    const parentnode=document.querySelector('.users');
-    parentnode.innerHTML="";
-    const token=localStorage.getItem('token');
-    try{
-    let response=await axios.get('http://localhost:3000/get-expense?page=2',{headers:{"Authorization":token}})
-    for (let i = 0; i < response.data.length; i++){
-        viewuser(response.data[i]);
-    }   
-    }
-    catch(err){
-        console.log(err)
-    };
-})
+// document.getElementById('Page1').addEventListener('click',async ()=>{
+//     const parentnode=document.querySelector('.users');
+//     parentnode.innerHTML="";
+//     const token=localStorage.getItem('token');
+//     try{
+//     let response=await axios.get('http://localhost:3000/get-expense?page=1',{headers:{"Authorization":token}})
+//     for (let i = 0; i < response.data.length; i++){
+//         viewuser(response.data[i]);
+//     }   
+//     }
+//     catch(err){
+//         console.log(err)
+//     };
+// })
+// document.getElementById('page2').addEventListener('click',async ()=>{
+//     const parentnode=document.querySelector('.users');
+//     parentnode.innerHTML="";
+//     const token=localStorage.getItem('token');
+//     try{
+//     let response=await axios.get('http://localhost:3000/get-expense?page=2',{headers:{"Authorization":token}})
+//     for (let i = 0; i < response.data.length; i++){
+//         viewuser(response.data[i]);
+//     }   
+//     }
+//     catch(err){
+//         console.log(err)
+//     };
+// })
