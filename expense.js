@@ -8,24 +8,17 @@ async function adddata(e){
 var desc=document.getElementById('desc').value;
 var type=document.getElementById('type').value;
     e.preventDefault();
-//    alert(id);
+
    
     if(amount!=0 && desc!='' &&type!=''){
         console.log(`${amount} ${desc} ${type}`);
-    //     class Obj{
-    //         constructor(amount,desc,type){
-    //             this.amount=amount;
-    //             this.desc=desc;
-    //             this.type=type;
-    //         }
-
-    //    }
+  
        let obj1={
                 "amount":amount,
                 "desc":desc,
                 "type":type
        }
-        // let obj =new Obj(`${amount}, ${desc}, ${type}`);
+      
             const token=localStorage.getItem('token');
             if(id==''){
                 try{
@@ -76,12 +69,7 @@ async function getuser(){
     try{
     let response=await axios.get('http://localhost:3000/get-expense',{headers:{"Authorization":token}})
     for (let i = 0; i < response.data.length; i++){
-        // nextValue = localStorage.getItem(localStorage.key(i));
-    //    console.log(nextValue);
-    //    let data=JSON.parse(value);
         viewuser(response.data[i]);
-    
-    
     }   
     }
     catch(err){
@@ -89,20 +77,9 @@ async function getuser(){
     };
 }
 
-// let nextValue;
-// for (let i = 0; i < localStorage.length; i++){
-//     nextValue = localStorage.getItem(localStorage.key(i));
-//    console.log(nextValue);
-//    let data=JSON.parse(value);
-//     viewuser(data);
 
-
-// }
  async function editexpense(amount){
-//     // console.log('clicked');
-//    let detail= localStorage.getItem(amount);
-//    let data=JSON.parse(detail);
-//    console.log(data);
+
 try{
 let response=await axios.get(`http://localhost:3000/getbyid/${amount}`)
 // console.log(response.data);
@@ -115,15 +92,10 @@ deletefromlist(response.data.id);
 catch(err){
     console.log(err);
 }
-//    var amount=document.getElementById('amount').value=data.amount;
-//    var desc=document.getElementById('desc').value=data.desc;
-//    var type=document.getElementById('type').value=data.type;
+
    
 }
 function viewuser(data){
-    // const li=document.createElement('li');
-    
-   
    
     const childhtml=`<li id=${data.id}> ${data.amount} ${data.desc} ${data.type} <button onclick="editexpense('${data.id}');">Edit</button><button onclick="deleteexpense('${data.id}');">Delete</button>`;
     
@@ -179,8 +151,7 @@ function deletefromlist(amount){
         alert('Something Went Wrong');
     })
    }
-  
-//    window.addEventListener('DOMContentLoaded',getuser);
+
    async function getleaderboard(){
     const parentnode=document.querySelector('#leaderboard1');
     parentnode.innerHTML="";
@@ -189,9 +160,7 @@ function deletefromlist(amount){
     try{
     let response=await axios.get('http://localhost:3000/premium/get-leadership',{headers:{"Authorization":token}})
     for (let i = 0; i < response.data.length; i++){
-        // nextValue = localStorage.getItem(localStorage.key(i));
-    //    console.log(nextValue);
-    //    let data=JSON.parse(value);
+  
     viewleaderboard(response.data[i]);
     
     
@@ -203,15 +172,65 @@ function deletefromlist(amount){
 }
 
    function viewleaderboard(data){
-    // const li=document.createElement('li');
-    
-   
-   
     const childhtml=`<li id=${data.id}> ${data.name} ${data.total}  `;
     
     const parentnode=document.querySelector('#leaderboard1');
     console.log(parentnode);
     parentnode.innerHTML=parentnode.innerHTML+childhtml;
-    // console.log(list);
+ 
+
+}
+
+
+document.getElementById('download').addEventListener('click',async function(e){
+    try{
+        const token=localStorage.getItem('token');
+        axios.get('http://localhost:3000/download-file',{headers:{"Authorization":token}})
+        .then((response)=>{
+            if(response.status===200){
+                var a=document.createElement("a");
+                a.href=response.data.fileurl;
+                a.download='myexpense.csv';
+                a.click();
+            }else{
+                throw new Error(response.data.message);
+            }
+        })
+        console.log(response);
+      
+    }
+    catch(err){
+            console.log(err);
+    }
+})
+window.addEventListener('DOMContentLoaded',getrecent);
+async function getrecent(){
+    const parentnode=document.querySelector('#leaderboard1');
+    parentnode.innerHTML="";
+    // alert("aaya")
+    const token=localStorage.getItem('token');
+    try{
+    let response=await axios.get('http://localhost:3000/recent-download',{headers:{"Authorization":token}})
+    console.log(response.data.data[0]);
+    for (let i = 0; i < response.data.data.length; i++){
+        
+    viewrecent(response.data.data[i]);
+    
+    
+    }   
+    }
+    catch(err){
+        console.log(err)
+    };
+}
+
+   function viewrecent(data){
+    console.log(data);
+    const childhtml=`<li id=${data.id}><a href="${data.fileurl}">Download</a> ${data.createdAt}  `;
+    
+    const parentnode=document.querySelector('#Recentdownload');
+    console.log(parentnode);
+    parentnode.innerHTML=parentnode.innerHTML+childhtml;
+ 
 
 }
